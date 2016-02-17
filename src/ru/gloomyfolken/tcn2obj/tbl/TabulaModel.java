@@ -9,8 +9,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
-import org.lwjgl.util.vector.Vector3f;
-
 import ru.gloomyfolken.tcn2obj.tbl.components.CubeGroup;
 import ru.gloomyfolken.tcn2obj.tbl.components.CubeInfo;
 import ru.gloomyfolken.tcn2obj.tbl.json.JsonHelper;
@@ -21,6 +19,7 @@ public class TabulaModel
 {
 
     public List<TabulaBox> boxes = new ArrayList<TabulaBox>();
+    public JsonTabulaModel model;
 
     // GlScale attributes
     public float scaleX = 1;
@@ -54,7 +53,7 @@ public class TabulaModel
                     break;
                 }
             }
-            JsonTabulaModel model = JsonHelper.parseTabulaModel(zipFile.getInputStream(modelEntry));
+            model = JsonHelper.parseTabulaModel(zipFile.getInputStream(modelEntry));
             textureSizeX = model.getTextureWidth();
             textureSizeY = model.getTextureHeight();
             toBoxes(model);
@@ -76,29 +75,8 @@ public class TabulaModel
         }
     }
 
-    private void offsetBoxes(JsonTabulaModel model)
-    {
-        for (CubeInfo cube : model.getCubes())
-        {
-            offsetToParents(cube, null);
-        }
-    }
-
-    private void offsetToParents(CubeInfo cube, CubeInfo parent)
-    {
-        if (parent != null)
-        {
-            applyParentTransforms(cube, parent);
-        }
-        for (CubeInfo child : cube.children)
-        {
-            offsetToParents(child, cube);
-        }
-    }
-
     private void toBoxes(JsonTabulaModel model)
     {
-        offsetBoxes(model);
         for (CubeInfo cube : model.getCubes())
         {
             makeBox(cube);
@@ -126,7 +104,8 @@ public class TabulaModel
         TabulaBox box = new TabulaBox(this, cube.name);
         new TabulaBox(this, cube.name);
         box.mirror = cube.txMirror;
-
+        box.cube = cube;
+        box.model = model;
         setOffsets(box, cube);
         setRotations(box, cube);
         setPositions(box, cube);
@@ -174,32 +153,5 @@ public class TabulaModel
         box.scaleX = (float) cube.scale[0];
         box.scaleY = (float) cube.scale[1];
         box.scaleZ = (float) cube.scale[2];
-    }
-
-    private Vector3f getFromDoubleArr(double[] arr)
-    {
-        return new Vector3f((float) arr[0], (float) arr[1], (float) arr[2]);
-    }
-
-    private void applyParentTransforms(CubeInfo cube, CubeInfo parent)
-    {
-        Vector3f cubeRotation = getFromDoubleArr(cube.rotation);
-        Vector3f parentRotation = getFromDoubleArr(parent.rotation);
-
-        Vector3f cubePosition = getFromDoubleArr(cube.position);
-        Vector3f parentPosition = getFromDoubleArr(parent.position);
-
-        Vector3f.add(parentRotation, cubeRotation, cubeRotation);
-        setFromVec(cubeRotation, cube.rotation);
-
-        Vector3f.add(parentPosition, cubePosition, cubePosition);
-        setFromVec(cubePosition, cube.position);
-    }
-
-    private void setFromVec(Vector3f vec, double[] arr)
-    {
-        arr[0] = vec.x;
-        arr[1] = vec.y;
-        arr[2] = vec.z;
     }
 }
