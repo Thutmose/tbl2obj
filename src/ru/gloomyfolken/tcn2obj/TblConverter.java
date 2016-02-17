@@ -27,18 +27,16 @@ public class TblConverter
 
         for (CubeInfo cube : tcn.model.getCubes())
         {
-            addFromCube(cubes, cube, false);
+            addFromCube(cubes, cube);
         }
         for (CubeGroup group : tcn.model.getCubeGroups())
         {
             addFromGroups(cubes, group);
         }
-
         for (TabulaBox box : tcn.boxes)
         {
             obj.shapes.add(convertBoxToShape(obj, box, scale));
         }
-
         return obj;
     }
 
@@ -161,12 +159,12 @@ public class TblConverter
         return null;
     }
 
-    private void addFromCube(HashSet<CubeInfo> cubes, CubeInfo cube, boolean root)
+    private void addFromCube(HashSet<CubeInfo> cubes, CubeInfo cube)
     {
-        if (!root) cubes.add(cube);
+        cubes.add(cube);
         for (CubeInfo sub : cube.children)
         {
-            addFromCube(cubes, sub, false);
+            addFromCube(cubes, sub);
         }
     }
 
@@ -183,11 +181,7 @@ public class TblConverter
     {
         if (parent != null)
         {
-            applyParentTransforms(cube, parent, shape);
-        }
-        else for (CubeInfo child : cube.children)
-        {
-            offsetToParents(child, cube, shape);
+            applyParentTransforms(parent, shape);
         }
     }
 
@@ -196,20 +190,20 @@ public class TblConverter
         return new Vector3f((float) arr[0], (float) arr[1], (float) arr[2]);
     }
 
-    private void applyParentTransforms(CubeInfo cube, CubeInfo parent, Shape shape)
+    private void applyParentTransforms(CubeInfo parent, Shape shape)
     {
-        CubeInfo parentparent = getParent(cubes, parent);
-        // TODO get this part working properly.
-        if (parentparent != null)
-        {
-            applyParentTransforms(parent, parentparent, shape);
-        }
         Vector3f parentRotation = getFromDoubleArr(parent.rotation);
         Vector3f parentPosition = getFromDoubleArr(parent.position);
         shape.rotate(-parentRotation.x, 1, 0, 0);
         shape.rotate(-parentRotation.y, 0, 1, 0);
         shape.rotate(-parentRotation.z, 0, 0, 1);
         shape.translate(parentPosition);
+        CubeInfo parentparent = getParent(cubes, parent);
+        // TODO get this part working properly.
+        if (parentparent != null)
+        {
+            applyParentTransforms(parentparent, shape);
+        }
     }
 
     /** @param box
