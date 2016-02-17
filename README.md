@@ -7,3 +7,6 @@ Required libraries:
  - LWJGJ util 2.9.0
  - Google GSON
  - Google guava
+
+# Original Credit for the tcn2obj should go here:
+https://github.com/GloomyFolken/tcn2obj
