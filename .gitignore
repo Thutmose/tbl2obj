@@ -1,0 +1,6 @@
+
+/bin/
+*.tbl
+*.obj
+*.tcn
+*.xml
