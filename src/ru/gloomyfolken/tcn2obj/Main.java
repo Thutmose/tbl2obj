@@ -50,6 +50,7 @@ public class Main
 
             String filename = tblFile.getName().substring(0, tblFile.getName().length() - obj.length());
             File objFile = new File(tblFile.getParentFile(), filename + ".obj");
+            File xmlFile = new File(tblFile.getParentFile(), filename + ".xml");
 
 //            if (objFile.exists())
 //            {
@@ -60,6 +61,8 @@ public class Main
             TabulaModel tblModel = new TabulaModel(tblFile);
             ObjModel objModel = tblConverter.tcn2obj(tblModel, 0.0625f);
             saveFile(objFile, objModel.toStringList());
+            TabulaMetadataExporter metaExp = new TabulaMetadataExporter(tblConverter);
+            saveFile(xmlFile, metaExp.getXMLLines());
         }
 
         System.out.println("Done!");

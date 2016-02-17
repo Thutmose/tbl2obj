@@ -19,21 +19,22 @@ import ru.gloomyfolken.tcn2obj.tbl.json.JsonTabulaModel;
 
 public class TblConverter
 {
-    HashSet<CubeInfo> cubes = Sets.newHashSet();
+    public HashSet<CubeInfo> cubes = Sets.newHashSet();
+    public TabulaModel model;
 
-    public ObjModel tcn2obj(TabulaModel tcn, float scale)
+    public ObjModel tcn2obj(TabulaModel model, float scale)
     {
         ObjModel obj = new ObjModel();
-
-        for (CubeInfo cube : tcn.model.getCubes())
+        this.model = model;
+        for (CubeInfo cube : model.model.getCubes())
         {
             addFromCube(cubes, cube);
         }
-        for (CubeGroup group : tcn.model.getCubeGroups())
+        for (CubeGroup group : model.model.getCubeGroups())
         {
             addFromGroups(cubes, group);
         }
-        for (TabulaBox box : tcn.boxes)
+        for (TabulaBox box : model.boxes)
         {
             obj.shapes.add(convertBoxToShape(obj, box, scale));
         }
