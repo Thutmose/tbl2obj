@@ -1,6 +1,8 @@
 package ru.gloomyfolken.tcn2obj;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,22 +52,55 @@ public class Main
 
             String filename = tblFile.getName().substring(0, tblFile.getName().length() - obj.length());
             File objFile = new File(tblFile.getParentFile(), filename + ".obj");
-            File xmlFile = new File(tblFile.getParentFile(), filename + ".xml");
-
-//            if (objFile.exists())
-//            {
-//                System.out.println("File " + objFile.getAbsolutePath() + " already exists.");
-//                continue;
-//            }
 
             TabulaModel tblModel = new TabulaModel(tblFile);
             ObjModel objModel = tblConverter.tcn2obj(tblModel, 0.0625f);
             saveFile(objFile, objModel.toStringList());
-            TabulaMetadataExporter metaExp = new TabulaMetadataExporter(tblConverter);
-            saveFile(xmlFile, metaExp.getXMLLines());
+            if (shouldExportXML())
+            {
+                File xmlFile = new File(tblFile.getParentFile(), filename + ".xml");
+                TabulaMetadataExporter metaExp = new TabulaMetadataExporter(tblConverter);
+                saveFile(xmlFile, metaExp.getXMLLines());
+            }
         }
 
         System.out.println("Done!");
+    }
+
+    private static boolean shouldExportXML()
+    {
+        File dir = new File(".");
+        File config = new File(dir, "tbl2obj.cfg");
+        if (config.exists())
+        {
+            try
+            {
+                BufferedReader reader = new BufferedReader(new FileReader(config));
+                String line = reader.readLine();
+                reader.close();
+                return Boolean.parseBoolean(line.split("=")[1].trim());
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            FileWriter writer;
+            try
+            {
+                writer = new FileWriter(config);
+                writer.write("outputXML=false");
+                writer.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        return false;
     }
 
     private static void saveFile(File file, List<String> lines) throws IOException
@@ -85,7 +120,7 @@ public class Main
         File[] filesArray = dir.listFiles();
         if (filesArray != null)
         {
-            for (File file : dir.listFiles())
+            for (File file : filesArray)
             {
                 if (file.isDirectory())
                 {

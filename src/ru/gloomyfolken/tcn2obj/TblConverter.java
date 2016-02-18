@@ -200,7 +200,6 @@ public class TblConverter
         shape.rotate(-parentRotation.z, 0, 0, 1);
         shape.translate(parentPosition);
         CubeInfo parentparent = getParent(cubes, parent);
-        // TODO get this part working properly.
         if (parentparent != null)
         {
             applyParentTransforms(parentparent, shape);

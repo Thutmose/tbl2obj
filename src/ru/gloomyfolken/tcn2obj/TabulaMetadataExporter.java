@@ -69,10 +69,10 @@ public class TabulaMetadataExporter
                 xmlStr += " startKey=\"" + comp.startKey + "\"";
                 xmlStr += " length=\"" + comp.length + "\"";
 
-                if (!isEmpty(comp.rotOffset)) xmlStr += " rotOffset=\"" + comp.rotOffset[0] + "," + comp.rotOffset[1]
-                        + "," + comp.rotOffset[2] + ",\"";
-                if (!isEmpty(comp.rotChange)) xmlStr += " rotChange=\"" + comp.rotChange[0] + "," + comp.rotChange[1]
-                        + "," + comp.rotChange[2] + ",\"";
+                if (!isEmpty(comp.rotOffset)) xmlStr += " rotOffset=\"" + -comp.rotOffset[0] + "," + -comp.rotOffset[1]
+                        + "," + -comp.rotOffset[2] + ",\"";
+                if (!isEmpty(comp.rotChange)) xmlStr += " rotChange=\"" + comp.rotChange[0] + "," + comp.rotChange[2]
+                        + "," + comp.rotChange[1] + ",\"";
                 if (!isEmpty(comp.posOffset)) xmlStr += " posOffset=\"" + comp.posOffset[0] + "," + comp.posOffset[1]
                         + "," + comp.posOffset[2] + ",\"";
                 if (!isEmpty(comp.posChange)) xmlStr += " posChange=\"" + comp.posChange[0] + "," + comp.posChange[1]
