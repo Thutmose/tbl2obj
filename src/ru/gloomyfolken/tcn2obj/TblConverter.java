@@ -11,11 +11,11 @@ import ru.gloomyfolken.tcn2obj.obj.ObjModel;
 import ru.gloomyfolken.tcn2obj.obj.Shape;
 import ru.gloomyfolken.tcn2obj.obj.TextureCoords;
 import ru.gloomyfolken.tcn2obj.obj.Vertex;
+import ru.gloomyfolken.tcn2obj.tbl.JsonTabulaModel;
 import ru.gloomyfolken.tcn2obj.tbl.TabulaBox;
 import ru.gloomyfolken.tcn2obj.tbl.TabulaModel;
 import ru.gloomyfolken.tcn2obj.tbl.components.CubeGroup;
 import ru.gloomyfolken.tcn2obj.tbl.components.CubeInfo;
-import ru.gloomyfolken.tcn2obj.tbl.json.JsonTabulaModel;
 
 public class TblConverter
 {

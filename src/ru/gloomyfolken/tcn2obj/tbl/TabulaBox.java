@@ -1,7 +1,6 @@
 package ru.gloomyfolken.tcn2obj.tbl;
 
 import ru.gloomyfolken.tcn2obj.tbl.components.CubeInfo;
-import ru.gloomyfolken.tcn2obj.tbl.json.JsonTabulaModel;
 
 public class TabulaBox
 {
@@ -10,40 +9,40 @@ public class TabulaBox
     public CubeInfo        cube;
 
     /** The size of the texture file's width in pixels. */
-    public float textureWidth = 64;
+    public float           textureWidth  = 64;
 
     /** The size of the texture file's height in pixels. */
-    public float textureHeight = 32;
+    public float           textureHeight = 32;
 
     /** The X offset into the texture used for displaying this model */
-    public int textureOffsetX;
+    public int             textureOffsetX;
 
     /** The Y offset into the texture used for displaying this model */
-    public int textureOffsetY;
+    public int             textureOffsetY;
 
-    public float rotationPointX;
-    public float rotationPointY;
-    public float rotationPointZ;
+    public float           rotationPointX;
+    public float           rotationPointY;
+    public float           rotationPointZ;
 
     // in degrees
-    public float rotateAngleX;
-    public float rotateAngleY;
-    public float rotateAngleZ;
+    public float           rotateAngleX;
+    public float           rotateAngleY;
+    public float           rotateAngleZ;
 
-    public boolean mirror;
+    public boolean         mirror;
 
-    public final String name;
-    public float        offsetX;
-    public float        offsetY;
-    public float        offsetZ;
+    public final String    name;
+    public float           offsetX;
+    public float           offsetY;
+    public float           offsetZ;
 
-    public float sizeX;
-    public float sizeY;
-    public float sizeZ;
+    public float           sizeX;
+    public float           sizeY;
+    public float           sizeZ;
 
-    public float scaleX;
-    public float scaleY;
-    public float scaleZ;
+    public float           scaleX;
+    public float           scaleY;
+    public float           scaleZ;
 
     public TabulaBox(TabulaModel parentModel, String name)
     {

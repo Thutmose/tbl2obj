@@ -1,4 +1,4 @@
-package ru.gloomyfolken.tcn2obj.tbl;
+package ru.gloomyfolken.tcn2obj;
 
 @SuppressWarnings("serial")
 public class ModelFormatException extends RuntimeException{

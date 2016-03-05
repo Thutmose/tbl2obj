@@ -9,10 +9,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
+import ru.gloomyfolken.tcn2obj.ModelFormatException;
+import ru.gloomyfolken.tcn2obj.json.helpers.JsonHelper;
 import ru.gloomyfolken.tcn2obj.tbl.components.CubeGroup;
 import ru.gloomyfolken.tcn2obj.tbl.components.CubeInfo;
-import ru.gloomyfolken.tcn2obj.tbl.json.JsonHelper;
-import ru.gloomyfolken.tcn2obj.tbl.json.JsonTabulaModel;
 
 /** Techne model loader, copy-pasted from Minecraft Forge */
 public class TabulaModel

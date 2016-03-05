@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.gloomyfolken.tcn2obj.json.JsonModel;
 import ru.gloomyfolken.tcn2obj.obj.ObjModel;
 import ru.gloomyfolken.tcn2obj.tbl.TabulaModel;
 import ru.gloomyfolken.tcn2obj.tcn.TechneModel;
@@ -15,13 +16,44 @@ import ru.gloomyfolken.tcn2obj.tcn.TechneModel;
 public class Main
 {
 
-    private static final String tcn = ".tcn";
-    private static final String tbl = ".tbl";
-    private static final String obj = ".obj";
+    private static final String tcn  = ".tcn";
+    private static final String tbl  = ".tbl";
+    private static final String obj  = ".obj";
+    private static final String json = ".json";
 
     public static void main(String[] args) throws Exception
     {
         File baseDir = new File(".");
+
+//        doTbl(baseDir);
+//        doTcn(baseDir);
+        doJson(baseDir);
+
+        System.out.println("Done!");
+    }
+    
+    private static void doJson(File baseDir) throws Exception
+    {
+        List<File> files = getFiles(baseDir, json);
+        JsonConverter converter = new JsonConverter();
+
+        for (File file : files)
+        {
+            System.out.println("Processing " + file.getAbsolutePath());
+
+            String filename = file.getName().substring(0, file.getName().length() - obj.length());
+            File objFile = new File(file.getParentFile(), filename + ".obj");
+
+            JsonModel model = new JsonModel(file);
+            System.out.println(model.toString());
+            ObjModel objModel = converter.tcn2obj(model, 0.0625f);
+
+            saveFile(objFile, objModel.toStringList());
+        }
+    }
+
+    private static void doTcn(File baseDir) throws Exception
+    {
         List<File> files = getFiles(baseDir, tcn);
         TcnConverter tcnConverter = new TcnConverter();
 
@@ -32,20 +64,17 @@ public class Main
             String filename = tcnFile.getName().substring(0, tcnFile.getName().length() - obj.length());
             File objFile = new File(tcnFile.getParentFile(), filename + ".obj");
 
-            if (objFile.exists())
-            {
-                System.out.println("File " + objFile.getAbsolutePath() + " already exists.");
-                continue;
-            }
-
             TechneModel tcnModel = new TechneModel(tcnFile);
             ObjModel objModel = tcnConverter.tcn2obj(tcnModel, 0.0625f);
 
             saveFile(objFile, objModel.toStringList());
         }
+    }
 
+    private static void doTbl(File baseDir) throws Exception
+    {
         TblConverter tblConverter = new TblConverter();
-        files = getFiles(baseDir, tbl);
+        List<File> files = getFiles(baseDir, tbl);
         for (File tblFile : files)
         {
             System.out.println("Processing " + tblFile.getAbsolutePath());
@@ -63,8 +92,6 @@ public class Main
                 saveFile(xmlFile, metaExp.getXMLLines());
             }
         }
-
-        System.out.println("Done!");
     }
 
     private static boolean shouldExportXML()

@@ -1,4 +1,4 @@
-package ru.gloomyfolken.tcn2obj.tbl.json;
+package ru.gloomyfolken.tcn2obj.json.helpers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

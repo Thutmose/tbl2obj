@@ -21,6 +21,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import ru.gloomyfolken.tcn2obj.ModelFormatException;
+
 /**
  * Techne model loader, copy-pasted from Minecraft Forge 
  */
