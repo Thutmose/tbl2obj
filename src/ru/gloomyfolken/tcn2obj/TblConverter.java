@@ -143,7 +143,6 @@ public class TblConverter
                 CubeInfo parent = getParent(cubes, cube);
                 if (parent != null)
                 {
-                    System.out.println(cube.name + " " + parent.name);
                     offsetToParents(cube, parent, shape);
                 }
                 return;

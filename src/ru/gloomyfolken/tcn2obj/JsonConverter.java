@@ -37,7 +37,6 @@ public class JsonConverter
             Shape shape = convertBoxToShape(obj, box, scale);
             if (shape != null) obj.shapes.add(shape);
         }
-        System.out.println(cubes.size() + " " + boxes.size());
         return obj;
     }
 
@@ -62,7 +61,6 @@ public class JsonConverter
                 }
             }
         }
-        System.out.println(subBoxes.size() + " sub boxes");
         boxes.removeAll(subBoxes);
     }
 

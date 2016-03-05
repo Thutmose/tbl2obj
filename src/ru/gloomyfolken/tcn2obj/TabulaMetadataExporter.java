@@ -47,7 +47,7 @@ public class TabulaMetadataExporter
 
     private void addAnimations()
     {
-        for (Animation anim : converter.model.model.getAnimations())
+        if (converter != null) for (Animation anim : converter.model.model.getAnimations())
         {
             addAnimation(anim);
         }
@@ -55,7 +55,7 @@ public class TabulaMetadataExporter
 
     private void addAnimation(Animation anim)
     {
-        int dir = -1;//TODO configuration for this.
+        int dir = -1;// TODO configuration for this.
         String name = anim.name;
         lines.add("        <phase type=\"" + name + "\">");
         for (String set : anim.sets.keySet())
@@ -70,8 +70,8 @@ public class TabulaMetadataExporter
                 xmlStr += " startKey=\"" + comp.startKey + "\"";
                 xmlStr += " length=\"" + comp.length + "\"";
 
-                if (!isEmpty(comp.rotOffset)) xmlStr += " rotOffset=\"" + dir*comp.rotOffset[0] + "," + dir*comp.rotOffset[1]
-                        + "," + dir*comp.rotOffset[2] + ",\"";
+                if (!isEmpty(comp.rotOffset)) xmlStr += " rotOffset=\"" + dir * comp.rotOffset[0] + ","
+                        + dir * comp.rotOffset[1] + "," + dir * comp.rotOffset[2] + ",\"";
                 if (!isEmpty(comp.rotChange)) xmlStr += " rotChange=\"" + comp.rotChange[0] + "," + comp.rotChange[2]
                         + "," + comp.rotChange[1] + ",\"";
                 if (!isEmpty(comp.posOffset)) xmlStr += " posOffset=\"" + comp.posOffset[0] + "," + comp.posOffset[1]
@@ -113,7 +113,7 @@ public class TabulaMetadataExporter
     private void addMetadata()
     {
         HashMap<String, ArrayList<String>> metaMap = Maps.newHashMap();
-        for (CubeInfo cube : converter.cubes)
+        if (converter != null) for (CubeInfo cube : converter.cubes)
         {
             for (String key : cube.metadata)
             {

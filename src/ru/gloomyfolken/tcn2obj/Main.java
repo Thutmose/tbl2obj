@@ -36,8 +36,8 @@ public class Main
     {
         File baseDir = new File(".");
         loadCfg();
-//        doTbl(baseDir);
-//        doTcn(baseDir);
+        doTbl(baseDir);
+        doTcn(baseDir);
         doJson(baseDir);
         cleanDir("/converted/assets");
         System.out.println("Done!");
@@ -82,9 +82,13 @@ public class Main
             File objFile = new File(file.getParentFile(), filename + ".obj");
 
             JsonModel model = new JsonModel(file);
-            System.out.println(model.toString());
             ObjModel objModel = converter.tcn2obj(model, 0.0625f);
-
+            if (tblMeta)
+            {
+                File xmlFile = new File(file.getParentFile(), filename + ".xml");
+                TabulaMetadataExporter metaExp = new TabulaMetadataExporter(null);
+                saveFile(xmlFile, metaExp.getXMLLines());
+            }
             saveFile(objFile, objModel.toStringList());
         }
     }

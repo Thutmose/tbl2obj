@@ -23,7 +23,6 @@ public class JsonModel
         {
             FileInputStream stream = new FileInputStream(file);
             model = JsonHelper.parseJsonModel(stream);
-            System.out.println(model.elements.size());
         }
         catch(Exception e)
         {
