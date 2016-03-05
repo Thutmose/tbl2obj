@@ -22,11 +22,16 @@ public class JsonConverter
 {
     public JsonModel model;
 
+    int              same = 0;
+
     public ObjModel tcn2obj(JsonModel model, float scale)
     {
         ObjModel obj = new ObjModel();
         this.model = model;
         ArrayList<Box> boxes = model.model.getElements();
+
+        preProcess();
+
         for (Box box : boxes)
         {
             Shape shape = convertBoxToShape(obj, box, scale);
@@ -34,6 +39,58 @@ public class JsonConverter
         }
         System.out.println(cubes.size() + " " + boxes.size());
         return obj;
+    }
+
+    private void preProcess()
+    {
+        ArrayList<Box> boxes = model.model.getElements();
+        HashSet<Box> subBoxes = Sets.newHashSet();
+        for (Box box : boxes)
+        {
+            if (subBoxes.contains(box)) continue;
+            Rotation rotation = box.getRotation();
+            for (Box box1 : boxes)
+            {
+                if (box == box1 || subBoxes.contains(box1)) continue;
+                Rotation rotation1 = box.getRotation();
+
+                boolean sameRot = rotation == null && rotation1 == null;
+                if (!sameRot) sameRot = rotation != null && rotation.equals(rotation1);
+                if (sameRot && isSubBox(box, box1))
+                {
+                    subBoxes.add(box1);
+                }
+            }
+        }
+        System.out.println(subBoxes.size() + " sub boxes");
+        boxes.removeAll(subBoxes);
+    }
+
+    private boolean isSubBox(Box box, Box toCheck)
+    {
+        float[] from = box.getFrom();
+        float[] to = box.getTo();
+        float[] from1 = toCheck.getFrom();
+        float[] to1 = toCheck.getTo();
+
+        boolean sameFromZX = from[0] == from1[0] && from[2] == from1[2];
+        boolean sameToZX = to[0] == to1[0] && to[2] == to1[2];
+        boolean intersectZX = to[1] >= from1[1] && from[1] <= to1[1];
+
+        if (sameFromZX && sameToZX && intersectZX) { return true; }
+
+        boolean sameFromZY = from[1] == from1[1] && from[2] == from1[2];
+        boolean sameToZY = to[1] == to1[1] && to[2] == to1[2];
+        boolean intersectZY = to[0] >= from1[0] && from[0] <= to1[0];
+
+        if (sameFromZY && sameToZY && intersectZY) { return true; }
+        boolean sameFromYX = from[0] == from1[0] && from[1] == from1[1];
+        boolean sameToYX = to[0] == to1[0] && to[1] == to1[1];
+        boolean intersectYX = to[2] >= from1[2] && from[2] <= to1[2];
+
+        if (sameFromYX && sameToYX && intersectYX) { return true; }
+
+        return false;
     }
 
     int                boxNames = 0;
@@ -51,7 +108,7 @@ public class JsonConverter
             box.setName(box.getName() + boxNames++);
         }
         names.add(box.getName());
-        box.setName("Cube");
+        box.setName("Cube_");
 
         float[] from = box.getFrom();
         float[] to = box.getTo();
@@ -137,7 +194,7 @@ public class JsonConverter
 
             shape.translate(new Vector3f(offset[0], offset[1], offset[2]));
         }
-        shape.translate(new Vector3f(-0.5f,0,0));
+        shape.translate(new Vector3f(-0.5f, 0, 0));
         shape.rotate(180, 0, 1, 0);
 
         return shape;
@@ -153,26 +210,31 @@ public class JsonConverter
         float[] uv = component.getUv();
         float texU = 16f, texV = 16f;
         int index2 = 0;
+        uv = new float[] { 0, 0, 0.75f, 0.75f };
 
         if (index == 0)
         {
             index2 = 0;
             index = 2;
+            return new TextureCoords(0, 0);
         }
         else if (index == 1)
         {
             index2 = 0;
             index = 3;
+            return new TextureCoords(0, 1);
         }
         else if (index == 3)
         {
             index2 = 1;
             index = 2;
+            return new TextureCoords(1, 0);
         }
         else if (index == 2)
         {
             index2 = 1;
             index = 3;
+            return new TextureCoords(1, 1);
         }
         return new TextureCoords(uv[index2] / texU, uv[index] / texV);
     }

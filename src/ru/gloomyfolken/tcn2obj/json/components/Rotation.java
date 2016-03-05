@@ -30,4 +30,16 @@ public class Rotation
             origin[i] = (float) this.origin[i];
         return origin;
     }
+    
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o instanceof Rotation)
+        {
+            Rotation rot = (Rotation) o;
+            return angle == rot.angle && rot.axis.equals(axis) && rot.origin[0] == origin[0] && rot.origin[1] == origin[1] && rot.origin[2] == origin[2];
+        }
+        
+        return super.equals(o);
+    }
 }
