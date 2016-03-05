@@ -1,7 +1,6 @@
 package ru.gloomyfolken.tcn2obj;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 
 import org.lwjgl.util.vector.Vector3f;
@@ -30,13 +29,16 @@ public class JsonConverter
         ArrayList<Box> boxes = model.model.getElements();
         for (Box box : boxes)
         {
-            obj.shapes.add(convertBoxToShape(obj, box, scale));
+            Shape shape = convertBoxToShape(obj, box, scale);
+            if (shape != null) obj.shapes.add(shape);
         }
+        System.out.println(cubes.size() + " " + boxes.size());
         return obj;
     }
 
-    int             boxNames = 0;
-    HashSet<String> names    = Sets.newHashSet();
+    int                boxNames = 0;
+    HashSet<String>    names    = Sets.newHashSet();
+    HashSet<float[][]> cubes    = Sets.newHashSet();
 
     private Shape convertBoxToShape(ObjModel model, Box box, float scale)
     {
@@ -50,13 +52,30 @@ public class JsonConverter
         }
         names.add(box.getName());
         box.setName("Cube");
-        Shape shape = new Shape(model, box.getName());
 
         float[] from = box.getFrom();
         float[] to = box.getTo();
 
+        for (float[][] arr : cubes)
+        {
+            if (isSame(from, arr[0]) && isSame(to, arr[1])) return null;
+        }
+        float[][] arr = new float[2][];
+        arr[0] = from;
+        arr[1] = to;
+        cubes.add(arr);
+
+        Shape shape = new Shape(model, box.getName());
+
         Faces faces = box.getFaces();
         faces.init();
+        from = from.clone();
+        to = to.clone();
+        for (int i = 0; i < 3; i++)
+        {
+            from[i] *= scale;
+            to[i] *= scale;
+        }
 
         Vertex frontTopLeft = new Vertex(from[0], from[1], from[2]);
         Vertex frontTopRight = new Vertex(to[0], from[1], from[2]);
@@ -106,7 +125,11 @@ public class JsonConverter
         if (rotation != null)
         {
             float[] offset = rotation.getOrigin();
-
+            offset = offset.clone();
+            for (int i = 0; i < 3; i++)
+            {
+                offset[i] *= scale;
+            }
             shape.translate(new Vector3f(-offset[0], -offset[1], -offset[2]));
             if (rotation.getAxis().equals("x")) shape.rotate((float) -rotation.getAngle(), 1, 0, 0);
             if (rotation.getAxis().equals("y")) shape.rotate((float) -rotation.getAngle(), 0, 1, 0);
@@ -114,12 +137,43 @@ public class JsonConverter
 
             shape.translate(new Vector3f(offset[0], offset[1], offset[2]));
         }
+        shape.translate(new Vector3f(-0.5f,0,0));
+        shape.rotate(180, 0, 1, 0);
 
         return shape;
     }
 
+    private boolean isSame(float[] a, float[] b)
+    {
+        return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
+    }
+
     private TextureCoords createUV(int index, FaceComponent component)
     {
-        return new TextureCoords(0, 0);
+        float[] uv = component.getUv();
+        float texU = 16f, texV = 16f;
+        int index2 = 0;
+
+        if (index == 0)
+        {
+            index2 = 0;
+            index = 2;
+        }
+        else if (index == 1)
+        {
+            index2 = 0;
+            index = 3;
+        }
+        else if (index == 3)
+        {
+            index2 = 1;
+            index = 2;
+        }
+        else if (index == 2)
+        {
+            index2 = 1;
+            index = 3;
+        }
+        return new TextureCoords(uv[index2] / texU, uv[index] / texV);
     }
 }

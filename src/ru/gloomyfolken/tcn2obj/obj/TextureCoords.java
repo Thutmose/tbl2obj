@@ -9,9 +9,9 @@ public class TextureCoords {
 	public Vector2f uvCoords;	
 	public int index;
 
-	public TextureCoords(float u, float v) {
-		this(new Vector2f(u, v));
-	}
+    public TextureCoords(float u, float v) {
+        this(new Vector2f(u, v));
+    }
 	
 	public TextureCoords(Vector2f uvCoords){
 		this.uvCoords = uvCoords;

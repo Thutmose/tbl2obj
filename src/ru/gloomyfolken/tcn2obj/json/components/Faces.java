@@ -31,5 +31,18 @@ public class Faces
     {
         String   texture;
         double[] uv;
+
+        public float[] getUv()
+        {
+            float[] uv = new float[this.uv.length];
+            for (int i = 0; i < uv.length; i++)
+                uv[i] = (float) this.uv[i];
+            return uv;
+        }
+
+        public String getTexture()
+        {
+            return texture;
+        }
     }
 }

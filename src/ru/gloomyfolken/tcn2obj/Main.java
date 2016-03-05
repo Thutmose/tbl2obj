@@ -25,8 +25,8 @@ public class Main
     {
         File baseDir = new File(".");
 
-//        doTbl(baseDir);
-//        doTcn(baseDir);
+        doTbl(baseDir);
+        doTcn(baseDir);
         doJson(baseDir);
 
         System.out.println("Done!");

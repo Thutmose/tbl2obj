@@ -1,5 +1,6 @@
 
 /bin/
+/converted/
 *.tbl
 *.obj
 *.tcn
