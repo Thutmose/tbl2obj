@@ -31,6 +31,7 @@ public class Main
 
     static boolean              tblMeta    = false;
     static boolean              jsonRename = false;
+    static boolean              jsonTexture = false;
 
     public static void main(String[] args) throws Exception
     {
@@ -39,7 +40,7 @@ public class Main
         doTbl(baseDir);
         doTcn(baseDir);
         doJson(baseDir);
-        cleanDir("/converted/assets");
+//        cleanDir("/converted/assets");
         System.out.println("Done!");
     }
 
@@ -165,6 +166,7 @@ public class Main
                 writer = new FileWriter(config);
                 writer.write("outputXML=false");
                 writer.write("renameJson=false");
+                writer.write("tryTextureJson=true");
                 writer.close();
             }
             catch (IOException e)
@@ -186,6 +188,10 @@ public class Main
         else if (args[0].equals("renameJson"))
         {
             jsonRename = Boolean.parseBoolean(args[1].trim());
+        }
+        else if (args[0].equals("tryTextureJson"))
+        {
+            jsonTexture = Boolean.parseBoolean(args[1].trim());
         }
     }
 

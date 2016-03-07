@@ -29,9 +29,9 @@ public class JsonConverter
         ObjModel obj = new ObjModel();
         this.model = model;
         ArrayList<Box> boxes = model.model.getElements();
-
+        System.out.println(boxes.size());
         preProcess();
-
+        System.out.println(boxes.size());
         for (Box box : boxes)
         {
             Shape shape = convertBoxToShape(obj, box, scale);
@@ -141,38 +141,47 @@ public class JsonConverter
         Vertex backBottomRight = new Vertex(to[0], to[1], to[2]);
         Vertex backBottomLeft = new Vertex(from[0], to[1], to[2]);
 
-        if (faces.faces[0] && faces.faces[1])
+        if (faces.faces[0])
         {
-            shape.faces.add(new Face(shape).append(frontBottomLeft, createUV(0, faces.components[0]))
-                    .append(frontBottomRight, createUV(1, faces.components[0]))
-                    .append(frontTopRight, createUV(2, faces.components[0]))
-                    .append(frontTopLeft, createUV(3, faces.components[0])));
-            shape.faces.add(new Face(shape).append(backBottomLeft, createUV(0, faces.components[1]))
-                    .append(backBottomRight, createUV(1, faces.components[1]))
-                    .append(backTopRight, createUV(2, faces.components[1]))
-                    .append(backTopLeft, createUV(3, faces.components[1])));
+            shape.faces.add(new Face(shape).append(frontBottomLeft, createUV(0, 0, faces.components[0]))
+                    .append(frontBottomRight, createUV(1, 0, faces.components[0]))
+                    .append(frontTopRight, createUV(2, 0, faces.components[0]))
+                    .append(frontTopLeft, createUV(3, 0, faces.components[0])));
         }
-        if (faces.faces[4] && faces.faces[5])
+        if (faces.faces[1])
         {
-            shape.faces.add(new Face(shape).append(frontTopLeft, createUV(0, faces.components[4]))
-                    .append(frontTopRight, createUV(1, faces.components[4]))
-                    .append(backTopRight, createUV(2, faces.components[4]))
-                    .append(backTopLeft, createUV(3, faces.components[4])));
-            shape.faces.add(new Face(shape).append(backBottomLeft, createUV(0, faces.components[5]))
-                    .append(backBottomRight, createUV(1, faces.components[5]))
-                    .append(frontBottomRight, createUV(2, faces.components[5]))
-                    .append(frontBottomLeft, createUV(3, faces.components[5])));
+            shape.faces.add(new Face(shape).append(backBottomLeft, createUV(0, 1, faces.components[1]))
+                    .append(backBottomRight, createUV(1, 1, faces.components[1]))
+                    .append(backTopRight, createUV(2, 1, faces.components[1]))
+                    .append(backTopLeft, createUV(3, 1, faces.components[1])));
         }
-        if (faces.faces[2] && faces.faces[3])
+        if (faces.faces[4])
         {
-            shape.faces.add(new Face(shape).append(backBottomLeft, createUV(0, faces.components[2]))
-                    .append(frontBottomLeft, createUV(1, faces.components[2]))
-                    .append(frontTopLeft, createUV(2, faces.components[2]))
-                    .append(backTopLeft, createUV(3, faces.components[2])));
-            shape.faces.add(new Face(shape).append(frontBottomRight, createUV(0, faces.components[3]))
-                    .append(backBottomRight, createUV(1, faces.components[3]))
-                    .append(backTopRight, createUV(2, faces.components[3]))
-                    .append(frontTopRight, createUV(3, faces.components[3])));
+            shape.faces.add(new Face(shape).append(frontTopLeft, createUV(0, 4, faces.components[4]))
+                    .append(frontTopRight, createUV(1, 4, faces.components[4]))
+                    .append(backTopRight, createUV(2, 4, faces.components[4]))
+                    .append(backTopLeft, createUV(3, 4, faces.components[4])));
+        }
+        if (faces.faces[5])
+        {
+            shape.faces.add(new Face(shape).append(backBottomLeft, createUV(0, 5, faces.components[5]))
+                    .append(backBottomRight, createUV(1, 5, faces.components[5]))
+                    .append(frontBottomRight, createUV(2, 5, faces.components[5]))
+                    .append(frontBottomLeft, createUV(3, 5, faces.components[5])));
+        }
+        if (faces.faces[2])
+        {
+            shape.faces.add(new Face(shape).append(backBottomLeft, createUV(0, 2, faces.components[2]))
+                    .append(frontBottomLeft, createUV(1, 2, faces.components[2]))
+                    .append(frontTopLeft, createUV(2, 2, faces.components[2]))
+                    .append(backTopLeft, createUV(3, 2, faces.components[2])));
+        }
+        if (faces.faces[3])
+        {
+            shape.faces.add(new Face(shape).append(frontBottomRight, createUV(0, 3, faces.components[3]))
+                    .append(backBottomRight, createUV(1, 3, faces.components[3]))
+                    .append(backTopRight, createUV(2, 3, faces.components[3]))
+                    .append(frontTopRight, createUV(3, 3, faces.components[3])));
         }
 
         Rotation rotation = box.getRotation();
@@ -203,37 +212,47 @@ public class JsonConverter
         return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
     }
 
-    private TextureCoords createUV(int index, FaceComponent component)
+    private TextureCoords createUV(int index, int face, FaceComponent component)
     {
-        float[] uv = component.getUv();
-        float texU = 16f, texV = 16f;
-        int index2 = 0;
-        uv = new float[] { 0, 0, 0.75f, 0.75f };
+        float[] uvs = getUVs(face, component.getUv(), index);
+        return new TextureCoords(uvs[0] / 16f, uvs[1] / 16f);
+    }
+
+    int north = 0;
+    int east  = 1;
+    int south = 2;
+    int west  = 3;
+    int up    = 4;
+    int down  = 5;
+
+    private float[] getUVs(int face, float[] uvsIn, int index)
+    {
+        float[] uvs = { 0, 0 };
+        if (!Main.jsonTexture)
+        {
+            uvsIn = new float[] { 0, 8, 8, 0 };
+        }
 
         if (index == 0)
         {
-            index2 = 0;
-            index = 2;
-            return new TextureCoords(0, 0);
+            uvs[0] = uvsIn[1];
+            uvs[1] = uvsIn[0];
         }
-        else if (index == 1)
+        if (index == 1)
         {
-            index2 = 0;
-            index = 3;
-            return new TextureCoords(0, 1);
+            uvs[0] = uvsIn[1];
+            uvs[1] = uvsIn[2];
         }
-        else if (index == 3)
+        if (index == 2)
         {
-            index2 = 1;
-            index = 2;
-            return new TextureCoords(1, 0);
+            uvs[0] = uvsIn[3];
+            uvs[1] = uvsIn[2];
         }
-        else if (index == 2)
+        if (index == 3)
         {
-            index2 = 1;
-            index = 3;
-            return new TextureCoords(1, 1);
+            uvs[0] = uvsIn[3];
+            uvs[1] = uvsIn[0];
         }
-        return new TextureCoords(uv[index2] / texU, uv[index] / texV);
+        return uvs;
     }
 }
