@@ -29,9 +29,7 @@ public class JsonConverter
         ObjModel obj = new ObjModel();
         this.model = model;
         ArrayList<Box> boxes = model.model.getElements();
-        System.out.println(boxes.size());
-        preProcess();
-        System.out.println(boxes.size());
+        if (!Main.jsonTexture) preProcess();
         for (Box box : boxes)
         {
             Shape shape = convertBoxToShape(obj, box, scale);
@@ -120,10 +118,19 @@ public class JsonConverter
         arr[1] = to;
         cubes.add(arr);
 
-        Shape shape = new Shape(model, box.getName());
-
         Faces faces = box.getFaces();
         faces.init();
+        String name = box.getName();
+        for (FaceComponent face : faces.components)
+        {
+            String temp;
+            if (face != null && (temp = this.model.model.getTexture(face.getTexture().replace("#", ""))) != null)
+            {
+                name = temp;
+            }
+        }
+        Shape shape = new Shape(model, name);
+
         from = from.clone();
         to = to.clone();
         for (int i = 0; i < 3; i++)
