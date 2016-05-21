@@ -103,13 +103,21 @@ public class Main
         {
             System.out.println("Processing " + tcnFile.getAbsolutePath());
 
-            String filename = tcnFile.getName().substring(0, tcnFile.getName().length() - obj.length());
-            File objFile = new File(tcnFile.getParentFile(), filename + ".obj");
+            try
+            {
+                String filename = tcnFile.getName().substring(0, tcnFile.getName().length() - obj.length());
+                File objFile = new File(tcnFile.getParentFile(), filename + ".obj");
 
-            TechneModel tcnModel = new TechneModel(tcnFile);
-            ObjModel objModel = tcnConverter.tcn2obj(tcnModel, 0.0625f);
+                TechneModel tcnModel = new TechneModel(tcnFile);
+                ObjModel objModel = tcnConverter.tcn2obj(tcnModel, 0.0625f);
+              saveFile(objFile, objModel.toStringList());
+            }
+            catch (Exception e)
+            {
+                System.err.println("Error with "+tcnFile);
+                e.printStackTrace();
+            }
 
-            saveFile(objFile, objModel.toStringList());
         }
     }
 
@@ -164,8 +172,8 @@ public class Main
             try
             {
                 writer = new FileWriter(config);
-                writer.write("outputXML=false");
-                writer.write("renameJson=false");
+                writer.write("outputXML=false\n");
+                writer.write("renameJson=false\n");
                 writer.write("tryTextureJson=true");
                 writer.close();
             }

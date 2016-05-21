@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 
 import ru.gloomyfolken.tcn2obj.json.JsonJsonModel;
 import ru.gloomyfolken.tcn2obj.tbl.JsonTabulaModel;
+import ru.gloomyfolken.tcn2obj.tcn.JsonTechneModel;
 
 /** Class for parsing json files to containers.
  *
@@ -15,6 +16,11 @@ public class JsonHelper
     public static JsonTabulaModel parseTabulaModel(InputStream stream)
     {
         return JsonFactory.getGson().fromJson(new InputStreamReader(stream), JsonTabulaModel.class);
+    }
+
+    public static JsonTechneModel parseTechneModel(InputStream stream)
+    {
+        return JsonFactory.getGson().fromJson(new InputStreamReader(stream), JsonTechneModel.class);
     }
 
     public static JsonJsonModel parseJsonModel(InputStream stream)
