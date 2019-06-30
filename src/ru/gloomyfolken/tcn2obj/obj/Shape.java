@@ -3,8 +3,8 @@ package ru.gloomyfolken.tcn2obj.obj;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.util.vector.Matrix3f;
-import org.lwjgl.util.vector.Vector3f;
+import javax.vecmath.Matrix3f;
+import javax.vecmath.Vector3f;
 
 public class Shape {
 
@@ -59,7 +59,7 @@ public class Shape {
 	
 	public void translate(Vector3f translationVector){
 		for (Vertex vertex : vertices){
-			Vector3f.add(vertex.position, translationVector, vertex.position);
+		    vertex.position.add(vertex.position, translationVector);
 		}
 	}
 	
@@ -81,7 +81,7 @@ public class Shape {
 	public void rotate(float angle, float x, float y, float z){
 		Matrix3f rotationMatrix = rotationMatrix(angle, x, y, z);
 		for (Vertex vertex : vertices){
-			Matrix3f.transform(rotationMatrix, vertex.position, vertex.position);
+		    rotationMatrix.transform(vertex.position, vertex.position);
 		}
 	}
 	
@@ -89,7 +89,7 @@ public class Shape {
 	{
 		angle *= (float)Math.PI/180f;
 	    Vector3f axis = new Vector3f(x,y,z);
-	    axis.normalise();
+	    axis.normalize();
 	    float s = (float)Math.sin(angle);
 	    float c = (float)Math.cos(angle);
 	    float oc = 1.0f - c;

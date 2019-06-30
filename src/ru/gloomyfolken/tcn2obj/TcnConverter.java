@@ -1,6 +1,6 @@
 package ru.gloomyfolken.tcn2obj;
 
-import org.lwjgl.util.vector.Vector3f;
+import javax.vecmath.Vector3f;
 
 import ru.gloomyfolken.tcn2obj.obj.Face;
 import ru.gloomyfolken.tcn2obj.obj.ObjModel;

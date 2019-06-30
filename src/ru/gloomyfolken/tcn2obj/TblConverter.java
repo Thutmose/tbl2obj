@@ -2,7 +2,7 @@ package ru.gloomyfolken.tcn2obj;
 
 import java.util.HashSet;
 
-import org.lwjgl.util.vector.Vector3f;
+import javax.vecmath.Vector3f;
 
 import com.google.common.collect.Sets;
 

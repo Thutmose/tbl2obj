@@ -62,7 +62,16 @@ public class TabulaMetadataExporter
         {
             String part = identToName(set);
             lines.add("            <part name=\"" + part + "\">");
-            ArrayList<AnimationComponent> components = anim.getComponents(set);
+            ArrayList<AnimationComponent> components = Lists.newArrayList();
+            try
+            {
+                components = anim.getComponents(set);
+            }
+            catch (Exception e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             for (AnimationComponent comp : components)
             {
                 String xmlStr = "                <component name=\"" + comp.name + "\"";

@@ -2,7 +2,7 @@ package ru.gloomyfolken.tcn2obj.obj;
 
 import java.util.Locale;
 
-import org.lwjgl.util.vector.Vector2f;
+import javax.vecmath.Vector2f;
 
 public class TextureCoords {
 

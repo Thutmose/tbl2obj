@@ -2,7 +2,7 @@ package ru.gloomyfolken.tcn2obj.obj;
 
 import java.util.Locale;
 
-import org.lwjgl.util.vector.Vector3f;
+import javax.vecmath.Vector3f;
 
 public class Vertex {
 
